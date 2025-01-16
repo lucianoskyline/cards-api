@@ -25,6 +25,8 @@ public class Cards {
 
     private Integer cardType;
 
+    private Integer cardStatus;
+
     private LocalDateTime expirationDate;
 
     private Integer deliveryStatus;

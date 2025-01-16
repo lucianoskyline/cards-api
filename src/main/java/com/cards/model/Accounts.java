@@ -39,4 +39,6 @@ public class Accounts {
 
     private String internalCode;
 
+    private Integer status;
+
 }

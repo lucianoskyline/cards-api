@@ -13,4 +13,6 @@ public interface CardsRepository extends JpaRepository<Cards, BigInteger> {
 
     List<Cards> findByAccount(Accounts account);
 
+    Boolean existsByAccountAndCardTypeAndCardStatus(Accounts account, Integer cardType, Integer cardStatus);
+
 }

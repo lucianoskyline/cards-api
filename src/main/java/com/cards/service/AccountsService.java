@@ -5,6 +5,7 @@ import com.cards.model.Accounts;
 import com.cards.repository.AccountsRepository;
 import com.cards.request.AccountsCreateRequest;
 import com.cards.response.AccountsCreateResponse;
+import com.cards.util.AccountsStatus;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,6 +35,7 @@ public class AccountsService {
         var account = modelMapper.map(request, Accounts.class);
         account.setRegistrationDate(LocalDateTime.now());
         account.setInternalCode(UUID.randomUUID().toString());
+        account.setStatus(AccountsStatus.ACTIVE.getValue());
         account = accountsRepository.save(account);
 
         return modelMapper.map(account, AccountsCreateResponse.class);

@@ -15,4 +15,8 @@ public interface AccountsRepository extends JpaRepository<Accounts, BigInteger> 
 
     Boolean existsByEmail(String email);
 
+    Accounts findByInternalCode(String internalCode);
+
+    Accounts findByInternalCodeAndStatus(String internalCode, Integer status);
+
 }
