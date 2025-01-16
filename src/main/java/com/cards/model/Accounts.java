@@ -41,4 +41,8 @@ public class Accounts {
 
     private Integer status;
 
+    private LocalDateTime cancelDate;
+
+    private String cancelDescription;
+
 }

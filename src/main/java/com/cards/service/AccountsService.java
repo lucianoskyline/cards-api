@@ -3,7 +3,9 @@ package com.cards.service;
 import com.cards.exception.BusinessException;
 import com.cards.model.Accounts;
 import com.cards.repository.AccountsRepository;
+import com.cards.request.AccountsCancelRequest;
 import com.cards.request.AccountsCreateRequest;
+import com.cards.response.AccountsCancelResponse;
 import com.cards.response.AccountsCreateResponse;
 import com.cards.util.AccountsStatus;
 import org.modelmapper.ModelMapper;
@@ -39,6 +41,26 @@ public class AccountsService {
         account = accountsRepository.save(account);
 
         return modelMapper.map(account, AccountsCreateResponse.class);
+    }
+
+    public AccountsCancelResponse cancel(AccountsCancelRequest request) {
+        var account = accountsRepository.findByInternalCode(request.getInternalCode());
+        if (account == null) {
+            throw new RuntimeException("Conta não encontrada");
+        }
+        if (account.getStatus() == AccountsStatus.CANCELLED.getValue()) {
+            throw new BusinessException("A conta já esta cancelada");
+        }
+
+        account.setCancelDate(LocalDateTime.now());
+        account.setCancelDescription(request.getDescription());
+        account.setStatus(AccountsStatus.CANCELLED.getValue());
+        account = accountsRepository.save(account);
+
+        var response = new AccountsCancelResponse();
+        response.setInternalCode(account.getInternalCode());
+        response.setMessage("Conta cancelada com sucesso");
+        return response;
     }
 
 }
