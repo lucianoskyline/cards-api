@@ -11,4 +11,8 @@ public interface AccountsRepository extends JpaRepository<Accounts, BigInteger> 
 
     Boolean existsByCpf(String cpf);
 
+    Boolean existsByCellphone(String cellphone);
+
+    Boolean existsByEmail(String email);
+
 }
