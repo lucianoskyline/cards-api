@@ -15,6 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.Arrays;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -42,8 +43,9 @@ public class CardsServiceTest {
 
         when(accountsRepository.findByInternalCodeAndStatus(account.getInternalCode(), AccountsStatus.ACTIVE.getValue())).thenReturn(account);
 
-        when(cardsRepository.existsByAccountAndCardTypeAndCardStatus(account,
-                CardsTypes.PHISICAL.getValue(), CardsStatus.CREATED.getValue())).thenReturn(false);
+        var cardsStatus= Arrays.asList(CardsStatus.CREATED.getValue(), CardsStatus.ACTIVE.getValue());
+        when(cardsRepository.existsByAccountAndCardTypeAndCardStatusIn(account,
+                CardsTypes.PHISICAL.getValue(), cardsStatus)).thenReturn(false);
 
         var mockCard = new Cards();
         mockCard.setCardStatus(CardsStatus.CREATED.getValue());

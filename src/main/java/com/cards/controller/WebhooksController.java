@@ -1,5 +1,6 @@
 package com.cards.controller;
 
+import com.cards.request.WebhooksCardsRequest;
 import com.cards.request.WebhooksDeliveryRequest;
 import com.cards.service.WebhooksService;
 import jakarta.validation.Valid;
@@ -18,6 +19,12 @@ public class WebhooksController {
     @PostMapping("/delivery")
     public ResponseEntity delivery(@Valid @RequestBody WebhooksDeliveryRequest request, @RequestHeader("token") String token) {
         webhooksService.verifyDelivery(request, token);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/card")
+    public ResponseEntity card(@Valid @RequestBody WebhooksCardsRequest request, @RequestHeader("token") String token) {
+        webhooksService.updateCard(request, token);
         return ResponseEntity.ok().build();
     }
 

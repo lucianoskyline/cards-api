@@ -1,8 +1,11 @@
 package com.cards.service;
 
 import com.cards.exception.BusinessException;
+import com.cards.repository.AccountsRepository;
 import com.cards.repository.CardsRepository;
+import com.cards.request.WebhooksCardsRequest;
 import com.cards.request.WebhooksDeliveryRequest;
+import com.cards.util.AccountsStatus;
 import com.cards.util.CardsStatus;
 import com.cards.util.CardsTypes;
 import com.cards.util.WebhooksStatus;
@@ -25,6 +28,9 @@ public class WebhooksService {
     private CardsRepository cardsRepository;
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    @Autowired
+    private AccountsRepository accountsRepository;
 
 
     public void verifyDelivery(WebhooksDeliveryRequest request, String token) {
@@ -53,6 +59,29 @@ public class WebhooksService {
         }
         cardsRepository.save(card);
     }
+
+    public void updateCard(WebhooksCardsRequest request, String token) {
+        validToken("CARDS", token);
+
+        var account = accountsRepository.findByInternalCodeAndStatus(request.getAccountId(), AccountsStatus.ACTIVE.getValue());
+        if (account == null) {
+            throw new BusinessException("Conta não encontrada");
+        }
+
+        var card = cardsRepository.findByTrackingIdAndCardTypeAndAccount(request.getCardId(), CardsTypes.VIRTUAL.getValue(), account);
+        if (card == null) {
+            throw new BusinessException("Cartão não encontrado");
+        }
+
+        if (card.getCardStatus() == CardsStatus.CANCELLED.getValue()) {
+            throw new BusinessException("Não é possivel atualizar um cartão cancelado");
+        }
+
+        card.setExpirationDate(request.getExpirationDate());
+        card.setCvv(request.getNextCvv());
+        cardsRepository.save(card);
+    }
+
 
     private void validToken(String type, String token) {
         if (token == null || token.isBlank()) {

@@ -62,7 +62,7 @@ public class AccountsServiceTest {
         RuntimeException exception = assertThrows(RuntimeException.class, () -> {
             accountService.create(createRequest);
         });
-        
+
         assertEquals("CPF já cadastrado", exception.getMessage());
     }
 

@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.UUID;
 
 @Service
@@ -31,13 +32,14 @@ public class CardsService {
             throw new BusinessException("Conta não encontrada");
         }
 
-        if (cardsRepository.existsByAccountAndCardTypeAndCardStatus(account,
-                request.getCardType().getValue(), CardsStatus.CREATED.getValue())) {
+        var cardsStatus=Arrays.asList(CardsStatus.CREATED.getValue(), CardsStatus.ACTIVE.getValue());
+        if (cardsRepository.existsByAccountAndCardTypeAndCardStatusIn(account,
+                request.getCardType().getValue(),  cardsStatus)) {
             throw new BusinessException("Já existe um cartão cadastrado");
         }
 
-        if (request.getCardType().getValue() == CardsTypes.VIRTUAL.getValue() && !cardsRepository.existsByAccountAndCardTypeAndCardStatus(account,
-                CardsTypes.PHISICAL.getValue(), CardsStatus.ACTIVE.getValue())) {
+        if (request.getCardType().getValue() == CardsTypes.VIRTUAL.getValue() && !cardsRepository.existsByAccountAndCardTypeAndCardStatusIn(account,
+                CardsTypes.PHISICAL.getValue(), cardsStatus)) {
             throw new BusinessException("Não é possivel criar um cartão virtual no momento. Aguarde o recebimento do cartão físico");
         }
 

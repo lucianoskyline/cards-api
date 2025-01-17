@@ -41,4 +41,6 @@ public class Cards {
 
     private String trackingId;
 
+    private String cvv;
+
 }
