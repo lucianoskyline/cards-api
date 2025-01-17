@@ -6,12 +6,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigInteger;
-import java.util.List;
+
 
 @Repository
 public interface CardsRepository extends JpaRepository<Cards, BigInteger> {
 
-    List<Cards> findByAccount(Accounts account);
+    Cards findByTrackingIdAndCardType(String trackingId, Integer cardType);
 
     Boolean existsByAccountAndCardTypeAndCardStatus(Accounts account, Integer cardType, Integer cardStatus);
 
